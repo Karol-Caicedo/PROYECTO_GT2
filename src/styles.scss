@@ -1,0 +1,60 @@
+/* Entrada global de estilos: tokens → tema Material 3 → base. */
+@use './styles/tokens';
+@use './styles/theme-material';
+@use './styles/base';
+
+/* Forzar fondo blanco 100% sólido en calendarios de Angular Material y diálogos */
+.cdk-overlay-container,
+.cdk-global-overlay-wrapper,
+.cdk-overlay-pane {
+  --mat-datepicker-calendar-container-background-color: #ffffff;
+  --mat-sys-surface: #ffffff;
+  --mat-sys-surface-container: #ffffff;
+  --mat-sys-surface-container-high: #ffffff;
+}
+
+.cdk-overlay-pane .mat-datepicker-content,
+.cdk-overlay-pane mat-datepicker-content,
+.mat-datepicker-content,
+.mat-datepicker-content-container,
+.mat-calendar,
+.mat-calendar-content,
+.mat-calendar-table,
+.mat-calendar-header {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* Expansión al 100% del ancho para campos de formulario en diálogos y clases .full-width */
+.mat-mdc-dialog-content mat-form-field,
+.mat-mdc-dialog-container mat-form-field,
+mat-dialog-content mat-form-field,
+mat-form-field.full-width,
+.full-width.mat-mdc-form-field {
+  width: 100% !important;
+  display: block !important;
+}
+
+.mat-mdc-dialog-content .mat-mdc-form-field-infix,
+.mat-mdc-dialog-container .mat-mdc-form-field-infix,
+mat-dialog-content .mat-mdc-form-field-infix,
+mat-form-field.full-width .mat-mdc-form-field-infix,
+.full-width.mat-mdc-form-field .mat-mdc-form-field-infix {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Evitar sombreado azul automático de Google Chrome / Edge en campos guardados (autofill) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--texto, #1e293b) !important;
+  caret-color: var(--texto, #1e293b) !important;
+  transition: background-color 600000s ease-in-out 0s, color 600000s ease-in-out 0s !important;
+}
+
+

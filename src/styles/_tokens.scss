@@ -1,0 +1,80 @@
+/* ============================================================
+   TOKENS DEL SISTEMA DE DISEÑO
+   Identidad institucional: Pacífico colombiano (Buenaventura)
+   - Azul  = recursos hídricos  |  Verde = riqueza forestal
+   - Proporción: 60% blanco/neutros · 30% azul · 10% verde
+   NOTA modo oscuro: no incluido en esta fase. Para agregarlo,
+   definir un bloque [data-theme="oscuro"] que reasigne estas
+   mismas variables (los componentes solo usan var(--...)).
+   ============================================================ */
+:root {
+  /* Marca */
+  --azul-900: #0b3a5e;
+  --azul-700: #125a8d;
+  --azul-500: #1976b9;
+  --azul-100: #dcebF6;
+  --azul-50: #f0f7fc;
+  --verde-900: #1c4a27;
+  --verde-700: #2b6a39;
+  --verde-500: #39864a;
+  --verde-100: #ddeee1;
+  --verde-50: #f1f8f3;
+
+  /* Neutros */
+  --texto: #1f2933;
+  --texto-secundario: #52606d;
+  --borde: #d9e2e8;
+  --fondo-pagina: #f7fafc;
+  --superficie: #ffffff;
+  --gris-100: #eef2f5;
+
+  /* Semánticos (solo estados) */
+  --error: #c62828;
+  --error-fondo: #fbe9e9;
+  --advertencia: #b26a00;
+  --advertencia-fondo: #fdf3e3;
+  --advertencia-borde: #f0d9a8;
+  --exito: #2b6a39;
+  --exito-fondo: #f1f8f3;
+  --info: #1976b9;
+  --info-fondo: #f0f7fc;
+
+  /* Gráficos (serie adicional + rejilla) */
+  --grafico-gris: #9aa5b1;
+  --grafico-rejilla: #e4ebf0;
+
+  /* Tipografía */
+  --fuente: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --t-titulo-xl: 28px;
+  --t-titulo-md: 24px;
+  --t-titulo-sm: 20px;
+  --t-cuerpo: 16px;
+  --t-secundario: 14px;
+
+  /* Espaciado (escala 4px) */
+  --esp-1: 4px;
+  --esp-2: 8px;
+  --esp-3: 12px;
+  --esp-4: 16px;
+  --esp-5: 20px;
+  --esp-6: 24px;
+  --esp-8: 32px;
+  --esp-10: 40px;
+
+  /* Radios */
+  --radio-s: 4px;
+  --radio-m: 8px;
+  --radio-l: 16px;
+  --radio-chip: 999px;
+
+  /* Sombras (2 niveles) */
+  --sombra-1: 0 1px 2px rgb(11 58 94 / 8%), 0 2px 8px rgb(11 58 94 / 8%);
+  --sombra-2: 0 4px 8px rgb(11 58 94 / 10%), 0 12px 28px rgb(11 58 94 / 12%);
+
+  /* Transiciones */
+  --transicion-rapida: 150ms ease-in-out;
+  --transicion-media: 200ms ease-in-out;
+
+  /* Marca: franja institucional */
+  --franja-marca: linear-gradient(90deg, var(--azul-500) 0%, var(--verde-500) 100%);
+}

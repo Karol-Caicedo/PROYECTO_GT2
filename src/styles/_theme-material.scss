@@ -1,0 +1,331 @@
+/* ============================================================
+   TEMA ANGULAR MATERIAL 3
+   primary = azul institucional · tertiary = verde · error = rojo
+   Las paletas personalizadas usan la rampa tonal M3 (0–100).
+   ============================================================ */
+@use '@angular/material' as mat;
+
+$paleta-azul: (
+  0: #000000,
+  10: #001e31,
+  20: #0b3a5e,
+  25: #0e456f,
+  30: #125a8d,
+  35: #15679f,
+  40: #1976b9,
+  50: #2f8ac6,
+  60: #549fd1,
+  70: #7bb8dd,
+  80: #a9d3ea,
+  90: #dcebf6,
+  95: #e9f2fa,
+  98: #f0f7fc,
+  99: #f7fbfd,
+  100: #ffffff,
+);
+
+$paleta-verde: (
+  0: #000000,
+  10: #06210f,
+  20: #1c4a27,
+  25: #234f2e,
+  30: #2b6a39,
+  35: #317642,
+  40: #39864a,
+  50: #4f9a60,
+  60: #6cae7b,
+  70: #8fc498,
+  80: #b7dabc,
+  90: #ddeee1,
+  95: #eaf4ed,
+  98: #f1f8f3,
+  99: #f7fbf8,
+  100: #ffffff,
+);
+
+$paleta-error: (
+  0: #000000,
+  10: #410002,
+  20: #690005,
+  25: #7e0007,
+  30: #93000a,
+  35: #a80710,
+  40: #c62828,
+  50: #d64545,
+  60: #e27070,
+  70: #ec9999,
+  80: #f4c7c7,
+  90: #f9dedc,
+  95: #fceeee,
+  98: #fff8f7,
+  99: #fffbff,
+  100: #ffffff,
+);
+
+html {
+  color-scheme: light;
+
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: $paleta-azul,
+      tertiary: $paleta-verde,
+      error: $paleta-error,
+    ),
+    typography: (
+      plain-family: ('Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif),
+      brand-family: ('Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif),
+    ),
+    density: 0,
+  ));
+}
+
+/* ---------- Ajustes de componentes (siempre con variables) ---------- */
+
+/* Botones: radio institucional 8px, peso semibold */
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-outlined-button,
+.mat-mdc-button {
+  border-radius: var(--radio-m);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Botón de acento verde (texto 16px+ en negrita: contraste AA válido) */
+.btn-acento {
+  background: var(--verde-500);
+  color: var(--superficie);
+  border: none;
+  border-radius: var(--radio-m);
+  font: 700 var(--t-cuerpo) / 1 var(--fuente);
+  padding: var(--esp-3) var(--esp-6);
+  cursor: pointer;
+  transition: background var(--transicion-rapida), box-shadow var(--transicion-rapida);
+  box-shadow: var(--sombra-1);
+}
+.btn-acento:hover { background: var(--verde-700); box-shadow: var(--sombra-2); }
+
+/* Botón secundario: contorno azul */
+.mat-mdc-outlined-button:not(:disabled) { border-color: var(--azul-500); }
+
+/* Tarjetas: superficie blanca, borde fino, sombra suave */
+.mat-mdc-card {
+  border-radius: var(--radio-m);
+  border: 1px solid var(--borde);
+  box-shadow: var(--sombra-1);
+  background: var(--superficie);
+}
+
+/* Campos de texto siempre sólidos: legibles sobre cualquier fondo (foto del login incluida) */
+.mat-mdc-text-field-wrapper {
+  background-color: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-m) var(--radio-m) 0 0;
+}
+.mat-mdc-text-field-wrapper.mdc-text-field--focused { border-color: var(--azul-500); }
+
+/* Tablas: encabezado Azul 50, hover suave */
+.mat-mdc-table thead,
+.mat-mdc-header-row { background: var(--azul-50); }
+.mat-mdc-header-cell { color: var(--azul-900); font-weight: 700; }
+.mat-mdc-row:hover .mat-mdc-cell { background: var(--azul-50); transition: background var(--transicion-rapida); }
+
+/* Chips: píldora */
+.mat-mdc-chip { border-radius: var(--radio-chip); }
+
+/* Stepper: paso activo azul, completado verde */
+.mat-step-header .mat-step-icon-selected { background: var(--azul-500); }
+.mat-step-header .mat-step-icon-state-done { background: var(--verde-700); }
+.mat-step-header .mat-step-icon-state-error { background: var(--error); }
+
+/* Tabs: tinta azul, etiqueta activa Azul 900 */
+.mat-mdc-tab .mdc-tab-indicator__content--underline { border-color: var(--azul-500); }
+.mat-mdc-tab.mdc-tab--active .mdc-tab__text-label { color: var(--azul-900); }
+
+/* Barra de progreso: verde institucional */
+.mat-mdc-progress-bar { --mdc-linear-progress-active-indicator-color: var(--verde-500); }
+
+/* Diálogos: fondo blanco sólido, sombra y bordes redondeados */
+.mat-mdc-dialog-container .mdc-dialog__surface,
+.mat-mdc-dialog-surface {
+  background-color: #ffffff !important;
+  color: var(--texto) !important;
+  border-radius: var(--radio-l) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+}
+
+app-confirm-dialog .dialogo {
+  background-color: #ffffff !important;
+  border-radius: var(--radio-l);
+}
+
+/* Snackbars (notificaciones): fondo blanco sólido, texto nítido y botón destacado */
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  background-color: #ffffff !important;
+  color: var(--azul-900) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18) !important;
+  border: 1px solid var(--borde) !important;
+  border-radius: var(--radio-m) !important;
+}
+.mat-mdc-snack-bar-container .mdc-snackbar__label {
+  color: var(--azul-900) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+.mat-mdc-snack-bar-container.snack-exito .mdc-snackbar__label {
+  color: var(--verde-900) !important;
+}
+.mat-mdc-snack-bar-container.snack-error .mdc-snackbar__label {
+  color: var(--error) !important;
+}
+.mat-mdc-snack-bar-container .mat-mdc-button,
+.mat-mdc-snack-bar-container .mdc-snackbar__action button {
+  color: var(--azul-700) !important;
+  font-weight: 700 !important;
+}
+
+/* ============================================================
+   CALENDARIO / DATEPICKER: Fondo blanco 100% sólido, opaco y nítido
+   ============================================================ */
+
+/* Tokens de Material 3 para superficies y Datepicker */
+:root,
+html,
+body,
+.cdk-overlay-container {
+  --mat-sys-surface: #ffffff !important;
+  --mat-sys-surface-container: #ffffff !important;
+  --mat-sys-surface-container-high: #ffffff !important;
+  --mat-sys-surface-container-highest: #ffffff !important;
+  --mat-sys-surface-container-low: #ffffff !important;
+  --mat-sys-surface-container-lowest: #ffffff !important;
+  --mat-sys-surface-bright: #ffffff !important;
+  --mat-sys-on-surface: #0f172a !important;
+  --mat-sys-on-surface-variant: #334155 !important;
+  --mat-sys-outline: #cbd5e1 !important;
+  --mat-sys-outline-variant: #e2e8f0 !important;
+  --mat-datepicker-calendar-container-background-color: #ffffff !important;
+  --mat-datepicker-calendar-container-text-color: #0f172a !important;
+  --mat-datepicker-calendar-date-text-color: #0f172a !important;
+  --mat-datepicker-calendar-header-text-color: #334155 !important;
+  --mat-datepicker-calendar-period-button-text-color: #0f172a !important;
+  --mat-datepicker-calendar-period-button-icon-color: #0f172a !important;
+  --mat-datepicker-calendar-navigation-button-icon-color: #0f172a !important;
+  --mat-datepicker-calendar-date-selected-state-background-color: #007bff !important;
+  --mat-datepicker-calendar-date-selected-state-text-color: #ffffff !important;
+  --mat-datepicker-calendar-date-today-outline-color: #007bff !important;
+}
+
+/* Overlay Pane y contenedores de Material Datepicker */
+.cdk-overlay-pane:has(mat-datepicker-content),
+.cdk-overlay-pane:has(.mat-datepicker-content),
+.cdk-overlay-container .mat-datepicker-popup,
+.mat-datepicker-popup {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  opacity: 1 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+}
+
+mat-datepicker-content,
+.mat-datepicker-content,
+.mat-datepicker-content-container,
+mat-calendar,
+.mat-calendar,
+.mat-calendar-content,
+.mat-calendar-table,
+.mat-calendar-table-header,
+.mat-calendar-body,
+.mat-calendar-header {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  opacity: 1 !important;
+}
+
+mat-datepicker-content,
+.mat-datepicker-content {
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+  border: 1px solid var(--borde) !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+}
+
+.mat-calendar-header {
+  padding: 12px 12px 6px !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.mat-calendar-period-button {
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  color: #0f172a !important;
+  text-transform: capitalize !important;
+}
+
+.mat-calendar-arrow {
+  border-top-color: #0f172a !important;
+  fill: #0f172a !important;
+}
+
+.mat-calendar-previous-button,
+.mat-calendar-next-button {
+  color: #0f172a !important;
+}
+
+.mat-calendar-table-header th {
+  color: #64748b !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  padding: 8px 0 !important;
+}
+
+.mat-calendar-body-cell-content {
+  color: #0f172a !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+
+.mat-calendar-body-cell:hover .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+  background-color: #f1f5f9 !important;
+  color: #0284c7 !important;
+}
+
+/* Celda seleccionada: azul sólido (#007bff) con texto blanco */
+.mat-calendar-body-selected,
+.mat-calendar-body-cell-content.mat-calendar-body-selected {
+  background-color: #007bff !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.45) !important;
+}
+
+/* Celda de hoy cuando no está seleccionada */
+.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border: 2px solid #007bff !important;
+  font-weight: 700 !important;
+  color: #007bff !important;
+}
+
+/* Inputs de fecha con cursor pointer */
+input[matDatepicker] {
+  cursor: pointer;
+}
+
+/* Indicadores de selector nativo del navegador */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.2);
+  opacity: 0.85;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
