@@ -431,8 +431,7 @@ export class HeaderComponent {
   }
 
   salir() {
-    this.auth.salir();
     this.layout.restablecerMenu();
-    this.router.navigate(['/auth/login']);
+    this.auth.salir(true);
   }
 }

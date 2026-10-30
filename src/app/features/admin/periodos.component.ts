@@ -58,7 +58,9 @@ interface Periodo {
             <mat-option value="seleccion">Selección (hasta 5 temas)</mat-option>
           </mat-select>
             <mat-hint>Define cómo responden los estudiantes</mat-hint></mat-form-field>
-          <button mat-raised-button color="primary" [disabled]="form.invalid">Crear</button>
+          <button mat-raised-button color="primary" [disabled]="form.invalid || enviando()">
+            {{ enviando() ? 'Creando...' : 'Crear' }}
+          </button>
         </form>
       </mat-card-content></mat-card>
       <mat-card class="card-historial"><mat-card-content>
@@ -138,7 +140,11 @@ export class PeriodosAdminComponent implements OnInit {
     const r = await this.http.get<Periodo[]>(`${this.api}/periodos`).toPromise().catch(() => []);
     this.periodos.set(r || []);
   }
+  enviando = signal(false);
+
   async crear() {
+    if (this.form.invalid || this.enviando()) return;
+    this.enviando.set(true);
     const val = this.form.value;
     const toYmd = (d: any) => {
       if (!d) return '';
@@ -150,16 +156,24 @@ export class PeriodosAdminComponent implements OnInit {
       }
       return String(d).split('T')[0];
     };
-    await this.http.post(`${this.api}/periodos`, {
-      ...val,
-      fechaInicio: toYmd(val.fechaInicio),
-      fechaFin: toYmd(val.fechaFin),
-      activo: false,
-    }).toPromise();
-    this.limpiarBorrador();
-    this.form.reset({ modoEncuesta: 'seleccion' });
-    await this.cargar();
-    this.ui.exito('Periodo creado.');
+
+    try {
+      await this.http.post(`${this.api}/periodos`, {
+        ...val,
+        fechaInicio: toYmd(val.fechaInicio),
+        fechaFin: toYmd(val.fechaFin),
+        activo: false,
+      }).toPromise();
+      this.limpiarBorrador();
+      this.form.reset({ modoEncuesta: 'seleccion' });
+      await this.cargar();
+      this.ui.exito('Periodo creado.');
+    } catch (err: any) {
+      const msg = err?.error?.message || err?.message || 'Error al crear el periodo.';
+      this.ui.error(Array.isArray(msg) ? msg.join(', ') : msg);
+    } finally {
+      this.enviando.set(false);
+    }
   }
   async activar(p: Periodo) {
     const ok = await this.ui.confirmar({ titulo: 'Activar periodo', mensaje: `Activar ${p.nombre}? El periodo activo actual se cerrará.`, textoConfirmar: 'Activar' });
