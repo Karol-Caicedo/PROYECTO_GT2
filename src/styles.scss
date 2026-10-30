@@ -3,10 +3,15 @@
 @use './styles/theme-material';
 @use './styles/base';
 
-/* Forzar fondo blanco 100% sólido en calendarios de Angular Material y diálogos */
-.cdk-overlay-container,
-.cdk-global-overlay-wrapper,
+/* Forzar fondo blanco 100% sólido y visibilidad en calendarios de Angular Material y diálogos */
+.cdk-overlay-container {
+  position: fixed !important;
+  z-index: 1000 !important;
+  pointer-events: none;
+}
+
 .cdk-overlay-pane {
+  pointer-events: auto;
   --mat-datepicker-calendar-container-background-color: #ffffff;
   --mat-sys-surface: #ffffff;
   --mat-sys-surface-container: #ffffff;
@@ -24,6 +29,7 @@
   background-color: #ffffff !important;
   background: #ffffff !important;
   opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* Expansión al 100% del ancho para campos de formulario en diálogos y clases .full-width */

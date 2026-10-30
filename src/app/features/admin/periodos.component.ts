@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { environment } from '../../../environments/environment';
 import { PageHeaderComponent } from '../../shared/ui/page-header.component';
 import { StatusChipComponent } from '../../shared/ui/status-chip.component';
@@ -26,7 +27,20 @@ interface Periodo {
 @Component({
   selector: 'app-periodos-admin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatTableModule, MatDatepickerModule, PageHeaderComponent, StatusChipComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTableModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    PageHeaderComponent,
+    StatusChipComponent,
+  ],
   styles: [`
     .card-crear { margin-bottom: var(--esp-6); }
     .card-historial { margin-top: var(--esp-6); }
@@ -44,20 +58,19 @@ interface Periodo {
           <mat-form-field><mat-label>Nombre (ej. 2026-2)</mat-label><input matInput formControlName="nombre" /></mat-form-field>
           <mat-form-field>
             <mat-label>Inicio</mat-label>
-            <input matInput [matDatepicker]="pickerInicio" (click)="pickerInicio.open()" formControlName="fechaInicio" placeholder="dd/mm/aaaa" />
+            <input matInput [matDatepicker]="pickerInicio" formControlName="fechaInicio" placeholder="dd/mm/aaaa" (click)="pickerInicio.open()" (focus)="pickerInicio.open()" style="cursor:pointer" readonly />
             <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
             <mat-datepicker #pickerInicio></mat-datepicker>
           </mat-form-field>
           <mat-form-field>
             <mat-label>Fin</mat-label>
-            <input matInput [matDatepicker]="pickerFin" (click)="pickerFin.open()" formControlName="fechaFin" placeholder="dd/mm/aaaa" />
+            <input matInput [matDatepicker]="pickerFin" formControlName="fechaFin" placeholder="dd/mm/aaaa" (click)="pickerFin.open()" (focus)="pickerFin.open()" style="cursor:pointer" readonly />
             <mat-datepicker-toggle matIconSuffix [for]="pickerFin"></mat-datepicker-toggle>
             <mat-datepicker #pickerFin></mat-datepicker>
           </mat-form-field>
           <mat-form-field><mat-label>Modo de encuesta</mat-label><mat-select formControlName="modoEncuesta">
             <mat-option value="seleccion">Selección (hasta 5 temas)</mat-option>
-          </mat-select>
-            <mat-hint>Define cómo responden los estudiantes</mat-hint></mat-form-field>
+          </mat-select></mat-form-field>
           <button mat-raised-button color="primary" [disabled]="form.invalid || enviando()">
             {{ enviando() ? 'Creando...' : 'Crear' }}
           </button>
@@ -65,26 +78,34 @@ interface Periodo {
       </mat-card-content></mat-card>
       <mat-card class="card-historial"><mat-card-content>
         <h2 class="titulo-seccion">Historial de periodos</h2>
-        <div class="tabla-responsive"><table mat-table [dataSource]="periodos()">
-          <ng-container matColumnDef="nombre"><th mat-header-cell *matHeaderCellDef>Periodo</th>
-            <td mat-cell *matCellDef="let p"><b>{{ p.nombre }}</b><br /><small style="color:var(--texto-secundario)">{{ p.fechaInicio | date:'mediumDate' }} – {{ p.fechaFin | date:'mediumDate' }}</small></td></ng-container>
-          <ng-container matColumnDef="estado"><th mat-header-cell *matHeaderCellDef>Estado</th>
-            <td mat-cell *matCellDef="let p"><app-status-chip [estado]="p.activo ? 'activo' : 'inactivo'" /></td></ng-container>
-          <ng-container matColumnDef="acc"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let p">
-            <div class="acciones">
-              @if (!p.activo) {
-                <button mat-stroked-button color="primary" (click)="activar(p)">
-                  <span class="material-symbols-outlined" aria-hidden="true" style="vertical-align:-4px">play_arrow</span>&nbsp;Activar
+        @if (periodos().length) {
+          <div class="tabla-responsive"><table mat-table [dataSource]="periodos()">
+            <ng-container matColumnDef="nombre"><th mat-header-cell *matHeaderCellDef>Periodo</th>
+              <td mat-cell *matCellDef="let p"><b>{{ p.nombre }}</b><br /><small style="color:var(--texto-secundario)">{{ p.fechaInicio | date:'mediumDate' }} – {{ p.fechaFin | date:'mediumDate' }}</small></td></ng-container>
+            <ng-container matColumnDef="estado"><th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let p"><app-status-chip [estado]="p.activo ? 'activo' : 'inactivo'" /></td></ng-container>
+            <ng-container matColumnDef="acc"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let p">
+              <div class="acciones">
+                @if (!p.activo) {
+                  <button mat-stroked-button color="primary" (click)="activar(p)">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="vertical-align:-4px">play_arrow</span>&nbsp;Activar
+                  </button>
+                } @else {
+                  <button mat-stroked-button color="warn" (click)="desactivar(p)" title="Desactivar este periodo">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="vertical-align:-4px">stop</span>&nbsp;Desactivar
+                  </button>
+                }
+                <button mat-icon-button color="warn" (click)="eliminar(p)" aria-label="Eliminar periodo" title="Eliminar">
+                  <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                 </button>
-              }
-              <button mat-icon-button color="warn" (click)="eliminar(p)" aria-label="Eliminar periodo" title="Eliminar">
-                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
-              </button>
-            </div>
-          </td></ng-container>
-          <tr mat-header-row *matHeaderRowDef="['nombre','modo','estado','acc']"></tr>
-          <tr mat-row *matRowDef="let r; columns: ['nombre','modo','estado','acc']"></tr>
-        </table></div>
+              </div>
+            </td></ng-container>
+            <tr mat-header-row *matHeaderRowDef="['nombre','estado','acc']"></tr>
+            <tr mat-row *matRowDef="let r; columns: ['nombre','estado','acc']"></tr>
+          </table></div>
+        } @else {
+          <p class="texto-secundario" style="margin-top:var(--esp-2)">No hay periodos registrados aún.</p>
+        }
       </mat-card-content></mat-card>
     </div>
   `,
@@ -137,8 +158,14 @@ export class PeriodosAdminComponent implements OnInit {
   }
 
   async cargar() {
-    const r = await this.http.get<Periodo[]>(`${this.api}/periodos`).toPromise().catch(() => []);
-    this.periodos.set(r || []);
+    try {
+      const r = await this.http.get<Periodo[]>(`${this.api}/periodos`).toPromise();
+      this.periodos.set(r || []);
+    } catch (err: any) {
+      this.periodos.set([]);
+      const msg = err?.error?.message || err?.message || 'No se pudieron cargar los periodos.';
+      this.ui.error(Array.isArray(msg) ? msg.join(', ') : msg);
+    }
   }
   enviando = signal(false);
 
@@ -178,9 +205,30 @@ export class PeriodosAdminComponent implements OnInit {
   async activar(p: Periodo) {
     const ok = await this.ui.confirmar({ titulo: 'Activar periodo', mensaje: `Activar ${p.nombre}? El periodo activo actual se cerrará.`, textoConfirmar: 'Activar' });
     if (!ok) return;
-    await this.http.post(`${this.api}/periodos/${p.id}/activar`, {}).toPromise();
-    await this.cargar();
-    this.ui.exito(`Periodo ${p.nombre} activado.`);
+    try {
+      await this.http.post(`${this.api}/periodos/${p.id}/activar`, {}).toPromise();
+      await this.cargar();
+      this.ui.exito(`Periodo ${p.nombre} activado.`);
+    } catch (err: any) {
+      this.ui.error(err?.error?.message || 'No se pudo activar el periodo.');
+    }
+  }
+  async desactivar(p: Periodo) {
+    const ok = await this.ui.confirmar({ titulo: 'Desactivar periodo', mensaje: `¿Desactivar ${p.nombre}? La encuesta quedará cerrada para los estudiantes.`, textoConfirmar: 'Desactivar', peligro: true });
+    if (!ok) return;
+    try {
+      await this.http.patch(`${this.api}/periodos/${p.id}`, { activo: false }).toPromise();
+      await this.cargar();
+      this.ui.exito(`Periodo ${p.nombre} desactivado.`);
+    } catch {
+      try {
+        await this.http.post(`${this.api}/periodos/${p.id}/desactivar`, {}).toPromise();
+        await this.cargar();
+        this.ui.exito(`Periodo ${p.nombre} desactivado.`);
+      } catch (err: any) {
+        this.ui.error(err?.error?.message || 'No se pudo desactivar el periodo desde la API.');
+      }
+    }
   }
   async eliminar(p: Periodo) {
     const ok = await this.ui.confirmar({ titulo: 'Eliminar periodo', mensaje: `¿Eliminar ${p.nombre}?`, textoConfirmar: 'Eliminar', peligro: true });
@@ -188,8 +236,8 @@ export class PeriodosAdminComponent implements OnInit {
     try {
       await this.http.delete(`${this.api}/periodos/${p.id}`).toPromise();
       this.ui.exito('Periodo eliminado.');
-    } catch {
-      this.ui.error('No se puede eliminar el periodo activo.');
+    } catch (err: any) {
+      this.ui.error(err?.error?.message || 'No se puede eliminar el periodo.');
     }
     await this.cargar();
   }
