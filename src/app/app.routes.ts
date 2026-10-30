@@ -34,10 +34,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/encuesta/encuesta.component').then((m) => m.EncuestaComponent),
       },
       {
-        path: 'encuesta-asignaturas',
-        loadComponent: () => import('./features/encuesta/encuesta-asignaturas.component').then((m) => m.EncuestaAsignaturasComponent),
-      },
-      {
         path: 'capacitaciones',
         loadComponent: () => import('./features/capacitaciones/mis-capacitaciones.component').then((m) => m.MisCapacitacionesComponent),
       },
@@ -57,10 +53,6 @@ export const routes: Routes = [
       {
         path: 'temas',
         loadComponent: () => import('./features/admin/temas.component').then((m) => m.TemasAdminComponent),
-      },
-      {
-        path: 'asignaturas',
-        loadComponent: () => import('./features/admin/asignaturas-admin.component').then((m) => m.AsignaturasAdminComponent),
       },
       {
         path: 'periodos',

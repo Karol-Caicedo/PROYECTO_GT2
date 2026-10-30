@@ -1,7 +1,7 @@
 # ARCHITECTURE_CONTEXT — SIGICE Frontend Variante (`PROYECTO_GT2`, `intereses-frontend`)
 > Última verificación: 2026-10-28 · Commit: `748002b` · Las reglas permanentes están en [AGENTS.md](./AGENTS.md).
 
-1. **Resumen.** SPA Angular 20 para la Universidad del Pacífico (Buenaventura). Cubre encuesta de intereses tecnológicos, evaluación de asignaturas, capacitaciones y panel administrativo. Usuarios: `ESTUDIANTE` y `ADMIN`. Es uno de los 4 repos de SIGICE: este frontend `PROYECTO_GT2`, las variantes `PROYECTO_GT` y `PROYECTO_GT3`, y el backend NestJS `PROYECTO_GTBACKEND`. No tiene SSR: se ejecuta por completo en el navegador y consume una API HTTP absoluta. La fuente de verdad de datos, reglas y autorización es el backend.
+1. **Resumen.** SPA Angular 20 para la Universidad del Pacífico (Buenaventura). Cubre encuesta de intereses tecnológicos, capacitaciones y panel administrativo. Usuarios: `ESTUDIANTE` y `ADMIN`. Es uno de los 4 repos de SIGICE: este frontend `PROYECTO_GT2`, las variantes `PROYECTO_GT` y `PROYECTO_GT3`, y el backend NestJS `PROYECTO_GTBACKEND`. No tiene SSR: se ejecuta por completo en el navegador y consume una API HTTP absoluta. La fuente de verdad de datos, reglas y autorización es el backend.
 
 2. **Stack verificado.**
 
@@ -39,9 +39,9 @@
 │       └── features/
 │           ├── auth/               # login, recuperar, restablecer, sso-callback, sso-completar
 │           ├── estudiante/         # layout con sidenav
-│           ├── encuesta/           # intereses y asignaturas
+│           ├── encuesta/           # intereses tecnológicos
 │           ├── capacitaciones/     # vista del estudiante
-│           └── admin/              # layout, dashboard, temas, asignaturas, periodos, capacitaciones, usuarios
+│           └── admin/              # layout, dashboard, temas, periodos, capacitaciones, usuarios
 ├── docs/guia-de-estilo.md          # especificación visual autoritativa
 ├── Dockerfile / nginx.conf / proxy.conf.js
 ├── angular.json / tsconfig*.json / package*.json
@@ -49,7 +49,7 @@
 ├── README.md / .gitignore
 ```
 
-Puntos de entrada: `src/main.ts` (arranque), `src/app/app.routes.ts` (navegación), `src/environments/environment.ts` (API). Hay 41 archivos `.ts` y ~6.398 líneas en `src/`; los mayores son `admin/dashboard.component.ts` (861), `encuesta/encuesta-asignaturas.component.ts` (855) y `admin/usuarios.component.ts` (533).
+Puntos de entrada: `src/main.ts` (arranque), `src/app/app.routes.ts` (navegación), `src/environments/environment.ts` (API). Hay 39 archivos `.ts` en `src/`.
 
 4. **Arquitectura y capas.** No hay capas de dominio, repositorios ni NgModules de feature: es una SPA de componentes standalone con servicios singleton. Las reglas de negocio viven en el backend; el frontend aplica validaciones de UX y orquesta llamadas HTTP.
 
@@ -114,10 +114,6 @@ Formato de estado: signals locales (`cargando`, `enviando`, `error`, `fallo`) y 
 | GET | `/auth/google`, `/auth/microsoft` | `features/auth/login.component.ts` (enlaces de redirección) |
 | GET | `/encuestas/temas-aleatorios` | `features/encuesta/encuesta.component.ts` |
 | GET | `/encuestas/mi-respuesta` | `features/encuesta/encuesta.component.ts` |
-| POST | `/encuestas` | `features/encuesta/encuesta.component.ts` (`{ items }`) |
-| GET | `/encuestas-asignaturas/estado` | `features/encuesta/encuesta-asignaturas.component.ts` |
-| POST | `/encuestas-asignaturas/inscripciones` | `features/encuesta/encuesta-asignaturas.component.ts` (`{ asignaturaIds }`) |
-| POST | `/encuestas-asignaturas` | `features/encuesta/encuesta-asignaturas.component.ts` (`{ items }`) |
 | GET | `/capacitaciones/mias` | `features/capacitaciones/mis-capacitaciones.component.ts`, `core/notificaciones.service.ts` |
 | POST | `/capacitaciones/:id/clic` | `features/capacitaciones/mis-capacitaciones.component.ts` |
 | GET | `/capacitaciones` | `features/admin/capacitaciones-admin.component.ts` |
@@ -129,20 +125,10 @@ Formato de estado: signals locales (`cargando`, `enviando`, `error`, `fallo`) y 
 | PATCH | `/temas/:id` | `features/admin/temas.component.ts` |
 | PATCH | `/temas/admin/cambiar-estado-todos` | `features/admin/temas.component.ts` |
 | DELETE | `/temas/:id` | `features/admin/temas.component.ts` |
-| GET | `/asignaturas/admin/todas` | `admin/asignaturas`, `admin/dashboard` |
-| POST | `/asignaturas` | `features/admin/asignaturas-admin.component.ts` |
-| PATCH | `/asignaturas/:id` | `features/admin/asignaturas-admin.component.ts` |
-| PATCH | `/asignaturas/admin/cambiar-estado-todas` | `features/admin/asignaturas-admin.component.ts` |
-| DELETE | `/asignaturas/:id` | `features/admin/asignaturas-admin.component.ts` |
-| GET | `/asignaturas/:asigId/grupos` | `features/admin/asignaturas-admin.component.ts` |
-| POST | `/asignaturas/:asigId/grupos` | `features/admin/asignaturas-admin.component.ts` |
-| PATCH | `/asignaturas/grupos/:gid` | `features/admin/asignaturas-admin.component.ts` |
-| DELETE | `/asignaturas/grupos/:grupoId` | `features/admin/asignaturas-admin.component.ts` |
 | GET | `/periodos` | `admin/periodos`, `admin/dashboard` |
 | POST | `/periodos` | `features/admin/periodos.component.ts` |
 | POST | `/periodos/:id/activar` | `features/admin/periodos.component.ts` |
 | DELETE | `/periodos/:id` | `features/admin/periodos.component.ts` |
-| PATCH | `/periodos/:id/encuesta-asignaturas` | `features/admin/periodos.component.ts` |
 | GET | `/usuarios` | `features/admin/usuarios.component.ts` |
 | POST | `/usuarios` | `features/admin/usuarios.component.ts` |
 | PATCH | `/usuarios/:id` | `features/admin/usuarios.component.ts` (diálogo de edición) |
@@ -152,12 +138,6 @@ Formato de estado: signals locales (`cargando`, `enviando`, `error`, `fallo`) y 
 | GET | `/dashboard/heatmap` | `features/admin/dashboard.component.ts` (`periodoId`, `semestre`) |
 | GET | `/dashboard/resumen` | `features/admin/dashboard.component.ts` (`periodoId`, `semestre`) |
 | GET | `/dashboard/comparativo` | `features/admin/dashboard.component.ts` (`temaId`) |
-| GET | `/dashboard-materias/top-asignaturas` | `features/admin/dashboard.component.ts` (`periodoId`, `semestre`) |
-| GET | `/dashboard-materias/tasa-respuesta` | `features/admin/dashboard.component.ts` (`periodoId`, `semestre`) |
-| GET | `/dashboard-materias/satisfaccion` | `features/admin/dashboard.component.ts` (`periodoId`, `semestre`) |
-| GET | `/dashboard-materias/resumen` | `features/admin/dashboard.component.ts` (`periodoId`, `semestre`) |
-| GET | `/dashboard-materias/comparativo` | `features/admin/dashboard.component.ts` (`asignaturaId`) |
-| GET | `/dashboard-materias/desglose-grupos` | `features/admin/dashboard.component.ts` (`asignaturaId`, `periodoId`) |
 | GET | `/api/uploads/<archivo>` | `core/imagenes.service.ts` + `core/auth-image.directive.ts` |
 
 **Modelos locales** (no hay carpeta `models/`; cada archivo declara sus interfaces).
@@ -165,15 +145,13 @@ Formato de estado: signals locales (`cargando`, `enviando`, `error`, `fallo`) y 
 | Modelo | Campos clave | Archivo |
 |---|---|---|
 | `Usuario` | `id`, `correo`, `nombre`, `semestre`, `rol` (`ESTUDIANTE`/`ADMIN`) | `src/app/core/auth.service.ts` |
-| `Periodo` | `id`, `nombre`, `fechas`, `activo`, `modoEncuesta` (`seleccion`/`calificacion`), `encuestaAsignaturasActiva` | `admin/periodos`, `encuesta`, `dashboard` |
-| `Tema` / `Asignatura` / `Grupo` | tema: nombre/descripcion/activo; asignatura: código/semestre/grupos; grupo: profesor/código/horario | `admin/temas`, `admin/asignaturas`, `encuesta` |
-| `EstadoEncuestaAsignatura` | `activa`, `periodo`, `todasAsignaturas`, `inscripcionIds`, `asignaturasInscritas`, `yaRespondio`, `miRespuesta` | `features/encuesta/encuesta-asignaturas.component.ts` |
+| `Periodo` | `id`, `nombre`, `fechas`, `activo`, `modoEncuesta` (`seleccion`/`calificacion`) | `admin/periodos`, `encuesta`, `dashboard` |
+| `Tema` | `id`, `nombre`, `descripcion`, `activo` | `admin/temas`, `admin/capacitaciones`, `encuesta` |
 | Respuesta de intereses | `{ items: [{ temaId, puntaje? }] }` | `features/encuesta/encuesta.component.ts` |
-| Respuesta de asignaturas | `{ items: [{ asignaturaId, grupoId?, tieneDificultad, nivelSatisfaccion }] }` | `features/encuesta/encuesta-asignaturas.component.ts` |
 | `Cap` (capacitación) | `titulo`, `descripcion`, `enlace`, `imagenUrl`, `estado`, `modalidad`, `fechaEvento`, semestres, `clics` | `admin/capacitaciones`, `mis-capacitaciones` |
-| DTOs de dashboard | `items`, `porSemestre`, `matriz`, `resumen`, `desglose-grupos` | `features/admin/dashboard.component.ts` |
+| DTOs de dashboard | `items`, `porSemestre`, `matriz`, `resumen` | `features/admin/dashboard.component.ts` |
 
-Invariantes aplicadas en el cliente (el backend debe revalidarlas; **No verificado** en este repo): 1–5 temas en modo selección; puntajes 1–5; grupo/docente obligatorio si la asignatura tiene grupos; máximo 4 asignaturas marcadas con dificultad; semestre 1–9; respuesta definitiva tras enviar; un solo periodo activo (lo decide el backend); imagen de capacitación ≤ 2 MB. El formato de error asumido es `{ message: string | string[] }`. El login envía `{ version, keyId, challenge, wrappedKey, iv, ciphertext }` y espera `{ access_token }`.
+Invariantes aplicadas en el cliente (el backend debe revalidarlas; **No verificado** en este repo): 1–5 temas en modo selección; puntajes 1–5; semestre 1–9; respuesta definitiva tras enviar; un solo periodo activo (lo decide el backend); imagen de capacitación ≤ 2 MB. El formato de error asumido es `{ message: string | string[] }`. El login envía `{ version, keyId, challenge, wrappedKey, iv, ciphertext }` y espera `{ access_token }`.
 
 7. **Autenticación, autorización y seguridad.**
 

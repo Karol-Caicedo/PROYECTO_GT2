@@ -55,7 +55,6 @@ export class EstudianteLayoutComponent {
 
   items = [
     { ruta: '/encuesta', texto: 'Encuesta Intereses', icono: 'poll' },
-    { ruta: '/encuesta-asignaturas', texto: 'Encuesta Materias', icono: 'menu_book' },
     { ruta: '/capacitaciones', texto: 'Capacitaciones', icono: 'school' },
   ];
 
