@@ -5,5 +5,5 @@ const isLocalDev =
 
 export const environment = {
   production: !isLocalDev,
-  apiUrl: isLocalDev ? 'http://localhost:3000/api' : 'https://proyectogtbackend-production.up.railway.app/api',
+  apiUrl: isLocalDev ? 'http://localhost:3000/api' : 'https://backendgt2-production.up.railway.app/api',
 };
